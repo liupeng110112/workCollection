@@ -1,0 +1,22 @@
+{
+	"family" : "POS",
+	"version" : "1.0.1",
+	"name" : "Javascript",
+	"spm" : {
+		"alias" : {
+			"$" : "center/js/sea-modules/jquery/jquery/1.10.1/jquery-debug",
+			"$.migrate" : "center/js/sea-modules/jquery/migrate/1.2.1/jquery-migrate-debug",
+			"$.cookie" : "center/js/sea-modules/jquery/cookie/1.3.1/jquery.cookie-debug",
+			"$.imageZoom" : "center/js/sea-modules/jquery/imageZoom/jquery.imageZoom-debug",
+			"_" : "center/js/sea-modules/gallery/underscore/1.4.4/underscore-debug",
+			"backbone" : "center/js/sea-modules/gallery/backbone/1.0.0/backbone-debug"
+		}
+	},
+	"devDependencies" : {
+		"grunt": "~0.4.1",
+		"grunt-cmd-transport": "~0.2.9",
+		"grunt-cmd-concat": "~0.2.5",
+		"grunt-contrib-uglify": "~0.2.2",
+		"grunt-contrib-clean": "~0.4.1"
+	}
+}
