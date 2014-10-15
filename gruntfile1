@@ -1,0 +1,118 @@
+// @charset "utf-8";
+module.exports = function (grunt) {
+    var transport = require('grunt-cmd-transport');
+    //	var text = transport.text.init(grunt);
+    var script = transport.script.init(grunt);
+
+    grunt.initConfig({
+        pkg : grunt.file.readJSON('package.json'),
+
+        transport : {
+            options : {
+                paths : ['../'],
+                alias : '<%= pkg.spm.alias %>',
+                debug : false,
+                parsers : {
+                    '.js' : [script.jsParser]
+                }
+            },
+
+            app : {
+                files : [
+                {
+                    expand :true,
+                    cwd : '../',
+                    src : ['center/js/static/**', 'center/js/sea-modules/**/*-debug.js', '!center/js/static/bootstrap/**', '!center/js/static/configs/**'],
+                    dest : '.build'
+                }
+                ]
+            }
+        },
+
+        concat : {
+            options : {
+                paths : ['.build/'],
+                include : 'relative'
+            },
+            app : {
+                options : {
+                    include : 'all'
+                },
+                files : [
+                {
+                    expand : true,
+                    cwd : '.build/',
+                    filter : 'isFile',
+                    src : ['center/js/static/apps/*'],
+                    dest : 'built/',
+                    ext : '.js'
+                }
+                ]
+            }
+        },
+        uglify : {
+            options : {
+                mangle : {
+                    except : ['require']
+                }
+            },
+            app : {
+                files : [
+                {
+                    expand : true,
+                    cwd : './built/center/js/static/apps/',
+                    src : ['*.js'],
+                    dest : 'built/uglify/',
+                }
+                ]
+            }
+        },
+
+        clean : {
+    //	spm : ['.build']
+    }
+    });
+
+    grunt.loadNpmTasks('grunt-cmd-transport');
+    grunt.loadNpmTasks('grunt-cmd-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+
+    // 写入sea.js和启动代码
+    grunt.registerTask('concatseajslibfile', 'concat sea.js and bootstrap code', function () {
+        var seajsfile = grunt.file.read('./js/sea-modules/seajs/seajs/2.1.0/sea.js');
+
+        var bootstrapOfFmlist = grunt.file.read('./js/static/bootstrap/fmlist.js');
+        var mainFmlist = grunt.file.read('./built/center/js/static/apps/fmlist.js');
+        var finalFmlist = seajsfile + mainFmlist + bootstrapOfFmlist;
+        grunt.file.write('./built/center/js/static/apps/fmlist.js', finalFmlist);
+
+        var bootstrapOfFmdetail = grunt.file.read('./js/static/bootstrap/fmdetail.js');
+        var mainFmdetail = grunt.file.read('./built/center/js/static/apps/fmdetail.js');
+        var finalFmdetail = seajsfile + mainFmdetail + bootstrapOfFmdetail;
+        grunt.file.write('./built/center/js/static/apps/fmdetail.js', finalFmdetail);
+
+        var bootstrapOfSsresult = grunt.file.read('./js/static/bootstrap/ssresult.js');
+        var mainSsresult = grunt.file.read('./built/center/js/static/apps/ssresult.js');
+        var finalSsresult = seajsfile + mainSsresult + bootstrapOfSsresult;
+        grunt.file.write('./built/center/js/static/apps/ssresult.js', finalSsresult);
+
+		var bootstrapOfUploadfm = grunt.file.read('./js/static/bootstrap/uploadfm.js');
+        var mainUploadfm = grunt.file.read('./built/center/js/static/apps/uploadfm.js');
+        var finalUploadfm = seajsfile + mainUploadfm + bootstrapOfUploadfm;
+        grunt.file.write('./built/center/js/static/apps/uploadfm.js', finalUploadfm);
+
+		var bootstrapOfMyupload = grunt.file.read('./js/static/bootstrap/myupload.js');
+        var mainMyupload = grunt.file.read('./built/center/js/static/apps/myupload.js');
+        var finalMyupload = seajsfile + mainMyupload + bootstrapOfMyupload;
+        grunt.file.write('./built/center/js/static/apps/myupload.js', finalMyupload);
+
+        var bootstrapOfJsandcssDebug = grunt.file.read('./js/static/bootstrap/jsandcss.js');
+        var mainJsandcssDebug = grunt.file.read('./built/center/js/static/apps/jsandcss-debug.js');
+        var finalJsandcssDebug = seajsfile + mainJsandcssDebug + bootstrapOfJsandcssDebug;
+        grunt.file.write('./built/center/js/static/apps/jsandcss-debug.js', finalJsandcssDebug);
+
+    });
+
+    grunt.registerTask('build', ['transport:app', 'concat:app', 'concatseajslibfile','uglify', 'clean']);
+};
