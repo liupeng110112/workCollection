@@ -1,0 +1,188 @@
+module.exports = function(grunt) {
+    var transport = require('grunt-cmd-transport');
+    var style = transport.style.init(grunt);
+    var text = transport.text.init(grunt);
+    var script = transport.script.init(grunt);
+
+    grunt.initConfig({
+        pkg: grunt.file.readJSON("package.json"),
+
+        transport: {
+            options: {
+                paths: ['.'],
+                alias: '<%= pkg.spm.alias %>',
+                parsers: {
+                    '.js': [script.jsParser],
+                    '.css': [style.css2jsParser],
+                    '.html': [text.html2jsParser]
+                }
+            },
+            modules: {
+                options: {
+                    idleading: 'dest/'
+                },
+                files: [{
+                    cwd: 'modules',
+					src: ['docCenter/*.js'],
+                    filter: 'isFile',
+                    dest: '.build'
+                }]
+            }     
+        },
+        concat:{
+             options: {
+                paths: ['.'],
+                include: 'relative'
+            },
+            modules: {
+                files: [{
+                    expand: true,
+                    cwd: '.build',
+                    src: ['**/*.js'],
+                    dest: 'dest',
+                    ext: '.js'
+                }]
+            }
+        }
+        ,
+
+        uglify: {
+            // lib: {
+            //     files: [{
+            //         expand: true,
+            //         cwd: 'libs/',
+            //         src: ['**/*.js', '!**/*-debug.js'],
+            //         dest: 'libs/',
+            //         ext: '.js'
+            //     }]
+            // },
+            modules: {
+                files: [{
+                    expand: true,
+                    cwd: 'dest/',
+                    src: ['**/*.js', '!**/*-debug.js'],
+                    dest: 'dest',
+                    ext: '.js'
+                }]
+            },
+            noncmd:{
+                files:[{
+                    expand: true,
+                    cwd:'modules/researchReport/',
+                    src:['config.js','client_functions.js','report-upload-new.js'],
+                    dest:'dest/researchReport',
+                    ext:'.js'
+                }]
+            }
+        } ,
+        jshint: {
+            options: {
+                curly: true,
+                eqeqeq: true,
+                eqnull: true,
+                browser: true,
+                globals: {
+                    jQuery: true
+                }
+            },
+            files: ['QuotedCompany/*.js']
+        },
+        imagemin:{
+            dist: {
+                options:{
+                    optimizationLevel: 3
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'test',
+                    src: ['*.png'],
+                    dest: 'test/'
+                }]
+            }
+        },
+        cssmin: {
+            
+            
+                options: {
+                    // banner: '<%= cssBaner %>'
+                },
+                css: {
+                    files: [{
+                        expand: true,
+                        src: ['../css/**/*.css','!../css/**/*-min.css'],
+                        dest: '../css/', // Destination path prefix.
+                        ext: '-min.css'
+                    }]
+                }
+            
+        },
+        watch: {
+            css:{
+                files:['../css/**/*.css','!../css/**/*-min.css'],
+                tasks:['cssmin'],
+                options:{
+                    spawn:false
+                }
+            },
+            js:{// files: ['<%= jshint.files %>'],
+                files: ['modules/**/*.js'],
+                tasks: [ /*'jshint',*/ 'transport', 'concat', 'uglify', 'clean'],
+                options:{
+                    spawn:false
+                }
+            }
+        },
+        clean: {
+            spm: ['.build']
+        },
+        log: {
+            foo: [1,2,3],
+            bar: 'hello world'
+        }
+    });
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
+    grunt.registerMultiTask('log', function(){
+        grunt.log.writeln(this.target + ":" + this.data)
+    })
+    
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-cmd-transport');
+    grunt.loadNpmTasks('grunt-cmd-concat');
+    
+    /*
+        先判断修改文件的后缀名（type），
+        |--为js，则用\为分割依据，分割路径，由于cwd已设置，所以取第
+        |  二个，考虑js连接时可能连接同文件夹下其它文件，故将文件夹
+        |  下所有js全部做一遍
+        |  注：transport,concat,uglify都必须重设一次路径，uglify必须
+        |  取消debug后缀的js文件压缩
+        |--为css，则直接设置路径
+        event.on执行完后会开始执行watch里设置的task，watch的spawn必
+        须设置为false
+    */
+    /*grunt.event.on('watch', function(action, filepath) {
+        var type = filepath.split('.');
+        type = type[type.length-1];
+        
+        if(type == "js")
+        {
+            var path_parts = filepath.split('\\'),
+            path = path_parts[1]+'\\**.js';
+            grunt.config(['transport','modules','files','0','src'], path);  
+            grunt.config(['concat','modules','files','0','src'], path);
+            path = [path,'!'+path_parts[1]+'\\**-debug.js'];
+            grunt.config(['uglify','modules','files','0','src'], path);
+        }
+        else
+            grunt.config(['cssmin','css','files','0','src'], filepath);
+       // grunt.log.writeln(grunt.config(['transport','modules','files','0','src']));
+        //grunt.log.writeln(grunt.config(['cssmin','css','files','0','src']));
+    });*/
+   
+    // grunt.registerTask('default', ['transport','concat','uglify','cssmin','clean','watch']);
+    grunt.registerTask('default', ['imagemin']);
+};
