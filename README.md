@@ -5,3 +5,5 @@
 > <http://caniuse.com/> 
 >
 > <http://npm.taobao.org/> 淘宝 NPM 镜像
+>
+> <http://www.liaoxuefeng.com/wiki/> git入门教程
