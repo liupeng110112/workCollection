@@ -14,8 +14,32 @@
 >
 > <http://www.cnblogs.com/lovecindywang/archive/2012/12/25/2832894.html/> 前端架构的一篇文章
 >
-> <http://www.cnblogs.com/lovecindywang/archive/2012/12/25/2832894.html/> 前端架构的一篇文章
+> <http://www.cnblogs.com/rubylouvre/archive/2009/10/14/1583362.html/> javascript判断浏览器类型与版本
 >
 > <http://es6.ruanyifeng.com/> ECMAScript 6入门
+>
+> <https://github.com/justin-zhengyi-wu/blogs/issues/8> Seajs 源码分析
+>
+> <http://www.zouyesheng.com/angular.html> AngularJS学习笔记
+>
+> <http://www.cnblogs.com/pifoo/archive/2011/05/28/webkit-webapp.html> webapp总结
+>
+> <http://zh.learnlayout.com/toc.html> css布局学习
+>
+> <https://github.com/RubyLouvre/mobileTech> 这个项目收集移动端开发所需要的一些资源与小技巧
+>
+> <http://www.html-js.com/article/1600> Javascript绝地武士的6个秘密
+>
+> <https://github.com/justin-zhengyi-wu/blogs/issues/8> Seajs 源码分析
+>
+> <http://www.zouyesheng.com/angular.html> AngularJS学习笔记
+>
+> <http://www.cnblogs.com/pifoo/archive/2011/05/28/webkit-webapp.html> webapp总结
+>
+> <http://zh.learnlayout.com/toc.html> css布局学习
+>
+> <https://github.com/RubyLouvre/mobileTech> 这个项目收集移动端开发所需要的一些资源与小技巧
+>
+> <http://www.html-js.com/article/1600> Javascript绝地武士的6个秘密
 
 
