@@ -30,16 +30,14 @@
 >
 > <http://www.html-js.com/article/1600> Javascript绝地武士的6个秘密
 >
-> <https://github.com/justin-zhengyi-wu/blogs/issues/8> Seajs 源码分析
+> <http://nqdeng.github.io/> 7天学习nodejs
 >
-> <http://www.zouyesheng.com/angular.html> AngularJS学习笔记
+> <http://docs.emmet.io/cheat-sheet/> sublime text 插件api以前叫做zend coding)
 >
-> <http://www.cnblogs.com/pifoo/archive/2011/05/28/webkit-webapp.html> webapp总结
+> <http://www.iteye.com/magazines/116-Web-Front-Performance-Best-Practice> 前端性能优化最佳实践
 >
-> <http://zh.learnlayout.com/toc.html> css布局学习
+> <http://www.cssha.com/reres> 通过ReRes让chrome拥有路径映射的autoResponse功能。
 >
-> <https://github.com/RubyLouvre/mobileTech> 这个项目收集移动端开发所需要的一些资源与小技巧
+> <http://blog.fens.me/series-nodejs/> 从零开始nodejs系列文章
 >
-> <http://www.html-js.com/article/1600> Javascript绝地武士的6个秘密
-
 
