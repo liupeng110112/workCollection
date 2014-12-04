@@ -41,3 +41,5 @@
 > <http://blog.fens.me/series-nodejs/> 从零开始nodejs系列文章
 >
 >http://wf.uisdc.com/cn/
+>
+>http://efe.baidu.com/ 百度EFE（Excellent FrontEnd）技术博客
