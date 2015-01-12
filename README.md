@@ -42,3 +42,5 @@
 >http://wf.uisdc.com/cn/
 >
 >http://efe.baidu.com/ 百度EFE（Excellent FrontEnd）技术博客
+>
+>http://lxcnn.cnblogs.com/ 正则需要注意的几个地方
