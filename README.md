@@ -48,3 +48,5 @@
 >https://github.com/CN-Chrome-DevTools/CN-Chrome-DevTools/blob/master/md/Performance-Profiling/javascript-memory-profiling.md#supporting_demos javascript内存分析
 >
 >http://en.wikipedia.org/wiki/ wiki文档
+>
+>https://developer.mozilla.org/en-US/docs/Web/API
