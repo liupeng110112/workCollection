@@ -50,3 +50,5 @@
 >http://en.wikipedia.org/wiki/ wiki文档
 >
 >https://developer.mozilla.org/en-US/docs/Web/API
+>
+>http://tqtan.com/2015/01/31/play-with-h5/ 玩转html页面
