@@ -1,0 +1,165 @@
+/*
+ * fis
+ * http://fis.baidu.com/
+ */
+
+'use strict';
+
+exports.name = 'copy';
+exports.usage = 'copy static respources to sepcify directory';
+exports.register = function(commander) {
+
+    commander
+        .action(function() {
+           var fs = require('fs'),
+            path = require('path')
+
+            //设置全局变量(分别对应三种资源)
+            global.isUpdatePath = {
+                'js': true,
+                'css': true,
+                'tpl': true
+            }
+
+
+        var pathList = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
+        var sourceCssDir = pathList.sourceCssDir,
+            sourceJsDir = pathList.sourceJsDir,
+            sourceTplDir = pathList.sourceTplDir,
+            destDir = pathList.destDir
+
+            copyFiles(sourceCssDir, destDir)
+            copyFiles(sourceJsDir, destDir)
+            copyFiles(sourceTplDir, destDir)
+
+
+            /*
+             * 修改tpl目录下的tpl资源引用路径
+             */
+
+        var scriptReg = /<script(?:.*?)src=[\"\'](.+?)[\"\'](?!<)(?:.*)\>(?:[\n\r\s]*?)(?:<\/script>)*/gm,
+            linkReg = /<link(?:.*?)href=[\"\'](.+?)[\"\'](?!<)(?:.*)\>(?:[\n\r\s]*?)(?:<\/link>)*/gm;
+
+        var tplPath = path.resolve(destDir + '\\tpl')
+
+        // 这里需要延时下
+        setTimeout(function() {
+            updateStaticSrc(tplPath)
+        }, 100)
+
+            function updateStaticSrc(tplPath) {
+
+                if (fs.existsSync(tplPath)) {
+
+                    fs.readdirSync(tplPath).forEach(function(file) {
+
+                        var filePath = path.join(tplPath, file)
+
+                        if (fs.statSync(filePath).isDirectory()) {
+
+                            updateStaticSrc(filePath)
+
+                        } else { //如果是文件就读取文件内容，找出link和script标签的src并进行替换
+
+                            var content = fs.readFileSync(filePath, 'utf-8')
+
+                            // 替换link标签的src
+                            content.replace(linkReg, function(all, orginSrc) {
+
+                                var updateSrc
+
+                                orginSrc.replace(/\/thsft\/css\/(.*?)\/(.*)/, function($, $0, $1) {
+
+                                    updateSrc = '/css/' + $1
+
+
+                                })
+                                content = content.replace(orginSrc, updateSrc)
+
+                            })
+                            // 替换script标签的src
+                            content.replace(scriptReg, function(all, orginSrc) {
+                                var updateSrc
+
+                                var isLib = (orginSrc.indexOf('jquery') < 0) && (orginSrc.indexOf('libs') < 0)
+
+                                orginSrc.replace(/\/thsft\/js\/(.*?)\/(.*)/, function($, $0, $1) {
+
+                                    // 如果是jquery类似的库js则不替换
+                                    if (isLib) {
+                                        updateSrc = '/js/' + $1
+                                    }
+
+                                })
+                                if (isLib) {
+                                    content = content.replace(orginSrc, updateSrc)
+                                }
+
+
+                            })
+
+                            fs.writeFile(filePath, content, function(err) {
+                                if (err) console.log(err)
+                            });
+
+
+                        }
+                    })
+                }
+            }
+            // 修改srcpit和link标签的src 便于fis构建
+
+            function copyFiles(sourceDir, destDir) {
+                // 首先对路径进行解析
+                var sourceDir = sourceDir.replace(/\//g, '\/')
+                // 然后判断这个路径是否存在
+                sourceDir = fs.existsSync(sourceDir) ? sourceDir : false
+
+                // 针对不同的静态资源放到不同的目录下
+                if (sourceDir.indexOf('css') > 0) {
+                    global.isUpdatePath.css && (destDir = destDir + '/css', global.isUpdatePath.css = false)
+                }
+                if (sourceDir.indexOf('js') > 0) {
+                    global.isUpdatePath.js && (destDir = destDir + '/js', global.isUpdatePath.js = false)
+                }
+                if (sourceDir.indexOf('Zend') > 0) {
+                    global.isUpdatePath.tpl && (destDir = destDir + '/tpl', global.isUpdatePath.tpl = false)
+                }
+
+                // 创建相应的目录
+                if (!fs.existsSync(destDir)) {
+                    fs.mkdirSync(destDir)
+                }
+                if (sourceDir) {
+                    fs.readdirSync(sourceDir).forEach(function(file) {
+                        // file参数表示的是文件名（包括文件或者目录）
+                        var sourcePathname = path.join(sourceDir, file),
+                            destPathname = path.join(destDir, file)
+                            // 判断是目录还是文件
+                            // 如果是目录,则执行递归
+                            if (fs.statSync(sourcePathname).isDirectory()) {
+                                // 注意的一点是复制文件之前要确保文件目录存在，否则会报错
+                                if (!fs.existsSync(destPathname)) {
+                                    fs.mkdirSync(destPathname)
+                                }
+                                // 进行递归
+                                copyFiles(sourcePathname, destPathname)
+                            } else {
+                                // 如果代码中有被压缩过的css则忽略掉
+                                var pathExtension = path.extname(sourcePathname)
+                                if (pathExtension == '.css' && (sourcePathname.indexOf('min') > 0)) {
+                                    return
+                                }
+                                // 复制文件到指定的目录下
+                                var isCompleted = fs.createReadStream(sourcePathname).pipe(fs.createWriteStream(destPathname))
+                                // if(isCompleted){
+                                //  console.log(sourcePathname + ':复制成功')
+                                // }
+                            }
+                    })
+                } else {
+                    console.log('请填写正确的路径')
+                }
+            }
+        });
+};
