@@ -107,7 +107,6 @@ exports.register = function(commander) {
                     })
                 }
             }
-            // 修改srcpit和link标签的src 便于fis构建
 
             function copyFiles(sourceDir, destDir) {
                 // 首先对路径进行解析
