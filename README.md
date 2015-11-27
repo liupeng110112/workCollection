@@ -1,4 +1,6 @@
 ##常用网址和文章收集
+> http://taobaofed.org/ 淘宝前端博客
+
 > <http://regex.alf.nu/> 正则测试 
 >
 > <http://caniuse.com/> 
